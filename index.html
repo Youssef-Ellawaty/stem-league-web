@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STEM LEAGUE | NEURAL INTERFACE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>STEM LEAGUE</h1>
+      <p>NEURAL SPORTS INTERFACE // V4.0</p>
+    </header>
+    <nav>
+      <a href="#" onclick="navigate('home')" class="active">FEED</a>
+      <a href="#" onclick="navigate('matches')">SCHEDULE</a>
+      <a href="#" onclick="navigate('teams')">UNITS</a>
+      <a href="#" onclick="navigate('standings')">RANKINGS</a>
+      <a href="#" onclick="navigate('admin')" id="admin-link" style="display:none;">COMMAND</a>
+      <a href="#" onclick="navigate('login')" id="login-link">SYNC</a>
+      <a href="#" onclick="logout()" id="logout-link" style="display:none;">TERMINATE</a>
+    </nav>
+
+    <main id="main-content">
+      <!-- Neural Feed Injection -->
+    </main>
+
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="modal-body"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

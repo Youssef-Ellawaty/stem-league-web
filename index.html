@@ -1,39 +1,413 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STEM LEAGUE | NEURAL INTERFACE</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script src="app.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STEM League - بطولة ستيم</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="app">
-    <header>
-      <h1>STEM LEAGUE</h1>
-      <p>NEURAL SPORTS INTERFACE // V4.0</p>
-    </header>
-    <nav>
-      <a href="#" onclick="navigate('home')" class="active">FEED</a>
-      <a href="#" onclick="navigate('matches')">SCHEDULE</a>
-      <a href="#" onclick="navigate('teams')">UNITS</a>
-      <a href="#" onclick="navigate('standings')">RANKINGS</a>
-      <a href="#" onclick="navigate('admin')" id="admin-link" style="display:none;">COMMAND</a>
-      <a href="#" onclick="navigate('login')" id="login-link">SYNC</a>
-      <a href="#" onclick="logout()" id="logout-link" style="display:none;">TERMINATE</a>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">⚽</span>
+                <span class="logo-text">STEM <span class="highlight">LEAGUE</span></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home" class="active">الرئيسية</a></li>
+                <li><a href="#matches">المباريات</a></li>
+                <li><a href="#teams">الفرق</a></li>
+                <li><a href="#standings">الترتيب</a></li>
+                <li><a href="#tots">فريق الموسم</a></li>
+            </ul>
+            <button class="admin-btn" onclick="openAdminLogin()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+            </button>
+        </div>
     </nav>
 
-    <main id="main-content">
-      <!-- Neural Feed Injection -->
-    </main>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="title-small">مرحباً بكم في</span>
+                <span class="title-main">STEM LEAGUE</span>
+                <span class="title-arabic">بطولة ستيم للمدارس</span>
+            </h1>
+            <p class="hero-subtitle">البطولة الأكثر إثارة وتنافسية بين فرق STEM</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number" id="totalTeams">8</span>
+                    <span class="stat-label">فريق</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="totalMatches">0</span>
+                    <span class="stat-label">مباراة</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="totalGoals">0</span>
+                    <span class="stat-label">هدف</span>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>اكتشف المزيد</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
 
-    <div id="modal" class="modal">
-      <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <div id="modal-body"></div>
-      </div>
+    <!-- News Section -->
+    <section id="news" class="section news-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">📰</span>
+                    آخر الأخبار
+                </h2>
+                <p class="section-subtitle">أخبار حصرية من قلب البطولة</p>
+            </div>
+            <div class="news-grid" id="newsGrid">
+                <!-- News will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Matches Section -->
+    <section id="matches" class="section matches-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">⚽</span>
+                    المباريات
+                </h2>
+                <p class="section-subtitle">جدول المباريات والنتائج</p>
+            </div>
+            
+            <div class="matches-tabs">
+                <button class="tab-btn active" data-tab="upcoming">المباريات القادمة</button>
+                <button class="tab-btn" data-tab="live">جارية الآن</button>
+                <button class="tab-btn" data-tab="finished">المباريات السابقة</button>
+            </div>
+            
+            <div class="matches-container">
+                <div class="matches-list" id="upcomingMatches">
+                    <!-- Upcoming matches -->
+                </div>
+                <div class="matches-list hidden" id="liveMatches">
+                    <!-- Live matches -->
+                </div>
+                <div class="matches-list hidden" id="finishedMatches">
+                    <!-- Finished matches -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Teams Section -->
+    <section id="teams" class="section teams-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">👥</span>
+                    الفرق
+                </h2>
+                <p class="section-subtitle">تعرف على فرق البطولة ولاعبيها</p>
+            </div>
+            
+            <div class="teams-selector">
+                <select id="teamSelector" class="team-select">
+                    <option value="">اختر الفريق</option>
+                </select>
+            </div>
+            
+            <div class="field-container" id="fieldContainer">
+                <div class="football-field">
+                    <div class="field-lines">
+                        <div class="center-circle"></div>
+                        <div class="center-line"></div>
+                        <div class="penalty-area top"></div>
+                        <div class="penalty-area bottom"></div>
+                        <div class="goal-area top"></div>
+                        <div class="goal-area bottom"></div>
+                    </div>
+                    <div class="players-formation" id="playersFormation">
+                        <!-- Players will be placed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Standings Section -->
+    <section id="standings" class="section standings-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">🏆</span>
+                    ترتيب الدوري
+                </h2>
+                <p class="section-subtitle">دور المجموعات والتأهل</p>
+            </div>
+            
+            <div class="standings-grid">
+                <div class="group-card">
+                    <div class="group-header">
+                        <h3>المجموعة الأولى</h3>
+                        <span class="group-badge">A</span>
+                    </div>
+                    <table class="standings-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>الفريق</th>
+                                <th>لعب</th>
+                                <th>فوز</th>
+                                <th>تعادل</th>
+                                <th>خسارة</th>
+                                <th>له</th>
+                                <th>عليه</th>
+                                <th>الفارق</th>
+                                <th>النقاط</th>
+                            </tr>
+                        </thead>
+                        <tbody id="groupAStandings">
+                            <!-- Group A standings -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="group-card">
+                    <div class="group-header">
+                        <h3>المجموعة الثانية</h3>
+                        <span class="group-badge">B</span>
+                    </div>
+                    <table class="standings-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>الفريق</th>
+                                <th>لعب</th>
+                                <th>فوز</th>
+                                <th>تعادل</th>
+                                <th>خسارة</th>
+                                <th>له</th>
+                                <th>عليه</th>
+                                <th>الفارق</th>
+                                <th>النقاط</th>
+                            </tr>
+                        </thead>
+                        <tbody id="groupBStandings">
+                            <!-- Group B standings -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="bracket-section">
+                <h3 class="bracket-title">مرحلة خروج المغلوب</h3>
+                <div class="bracket-container" id="bracketContainer">
+                    <!-- Bracket will be rendered here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team of the Season -->
+    <section id="tots" class="section tots-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">⭐</span>
+                    فريق الموسم
+                </h2>
+                <p class="section-subtitle">أفضل 5 لاعبين في الموسم</p>
+            </div>
+            
+            <div class="tots-container">
+                <div class="tots-field">
+                    <div class="tots-players" id="totsPlayers">
+                        <!-- TOTS players -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Player Modal -->
+    <div class="modal" id="playerModal">
+        <div class="modal-overlay" onclick="closePlayerModal()"></div>
+        <div class="modal-content player-card-modal">
+            <button class="modal-close" onclick="closePlayerModal()">&times;</button>
+            <div class="player-card-large" id="playerCardContent">
+                <!-- Player card content -->
+            </div>
+        </div>
     </div>
-  </div>
+
+    <!-- Match Details Modal -->
+    <div class="modal" id="matchModal">
+        <div class="modal-overlay" onclick="closeMatchModal()"></div>
+        <div class="modal-content match-modal">
+            <button class="modal-close" onclick="closeMatchModal()">&times;</button>
+            <div class="match-details" id="matchDetails">
+                <!-- Match details -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div class="modal" id="adminLoginModal">
+        <div class="modal-overlay" onclick="closeAdminLogin()"></div>
+        <div class="modal-content admin-login-modal">
+            <button class="modal-close" onclick="closeAdminLogin()">&times;</button>
+            <div class="admin-login-content">
+                <h2>🔐 لوحة الإدارة</h2>
+                <p>أدخل كلمة المرور للدخول</p>
+                <input type="password" id="adminPassword" placeholder="كلمة المرور" class="admin-input">
+                <button class="btn btn-primary" onclick="loginAdmin()">دخول</button>
+                <p class="error-msg" id="loginError"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h2>⚙️ لوحة الإدارة</h2>
+            <button class="btn-close" onclick="closeAdminPanel()">&times;</button>
+        </div>
+        
+        <div class="admin-tabs">
+            <button class="admin-tab active" data-panel="rounds">الجولات</button>
+            <button class="admin-tab" data-panel="matches-admin">المباريات</button>
+            <button class="admin-tab" data-panel="teams-admin">الفرق</button>
+            <button class="admin-tab" data-panel="news-admin">الأخبار</button>
+            <button class="admin-tab" data-panel="tots-admin">فريق الموسم</button>
+        </div>
+        
+        <div class="admin-content">
+            <!-- Rounds Panel -->
+            <div class="admin-section" id="roundsPanel">
+                <h3>إدارة الجولات</h3>
+                <div class="form-group">
+                    <input type="text" id="roundName" placeholder="اسم الجولة" class="admin-input">
+                    <button class="btn btn-success" onclick="addRound()">إضافة جولة</button>
+                </div>
+                <div class="rounds-list" id="roundsList"></div>
+            </div>
+            
+            <!-- Matches Admin Panel -->
+            <div class="admin-section hidden" id="matchesAdminPanel">
+                <h3>إدارة المباريات</h3>
+                <div class="form-row">
+                    <select id="matchRound" class="admin-input">
+                        <option value="">اختر الجولة</option>
+                    </select>
+                    <select id="matchTeam1" class="admin-input">
+                        <option value="">الفريق الأول</option>
+                    </select>
+                    <select id="matchTeam2" class="admin-input">
+                        <option value="">الفريق الثاني</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <input type="datetime-local" id="matchDate" class="admin-input">
+                    <select id="matchStatus" class="admin-input">
+                        <option value="upcoming">لم تُلعب بعد</option>
+                        <option value="live">جارية</option>
+                        <option value="finished">انتهت</option>
+                    </select>
+                </div>
+                <button class="btn btn-success" onclick="addMatch()">إضافة مباراة</button>
+                
+                <div class="matches-admin-list" id="matchesAdminList"></div>
+            </div>
+            
+            <!-- Teams Admin Panel -->
+            <div class="admin-section hidden" id="teamsAdminPanel">
+                <h3>إدارة الفرق واللاعبين</h3>
+                <div class="form-row">
+                    <input type="text" id="teamName" placeholder="اسم الفريق" class="admin-input">
+                    <select id="teamGroup" class="admin-input">
+                        <option value="A">المجموعة A</option>
+                        <option value="B">المجموعة B</option>
+                    </select>
+                    <button class="btn btn-success" onclick="addTeam()">إضافة فريق</button>
+                </div>
+                
+                <div class="teams-admin-list" id="teamsAdminList"></div>
+                
+                <div class="player-form" id="playerForm">
+                    <h4>إضافة لاعب</h4>
+                    <div class="form-row">
+                        <select id="playerTeam" class="admin-input">
+                            <option value="">اختر الفريق</option>
+                        </select>
+                        <input type="text" id="playerName" placeholder="اسم اللاعب" class="admin-input">
+                        <select id="playerPosition" class="admin-input">
+                            <option value="GK">حارس مرمى</option>
+                            <option value="DF">مدافع</option>
+                            <option value="MF">وسط</option>
+                            <option value="FW">مهاجم</option>
+                        </select>
+                        <input type="number" id="playerNumber" placeholder="رقم القميص" class="admin-input" min="1" max="99">
+                    </div>
+                    <button class="btn btn-success" onclick="addPlayer()">إضافة لاعب</button>
+                </div>
+            </div>
+            
+            <!-- News Admin Panel -->
+            <div class="admin-section hidden" id="newsAdminPanel">
+                <h3>إدارة الأخبار</h3>
+                <div class="form-group">
+                    <input type="text" id="newsTitle" placeholder="عنوان الخبر" class="admin-input">
+                    <textarea id="newsContent" placeholder="محتوى الخبر" class="admin-input"></textarea>
+                    <input type="text" id="newsImage" placeholder="رابط الصورة" class="admin-input">
+                    <button class="btn btn-success" onclick="addNews()">إضافة خبر</button>
+                </div>
+                <div class="news-admin-list" id="newsAdminList"></div>
+            </div>
+            
+            <!-- TOTS Admin Panel -->
+            <div class="admin-section hidden" id="totsAdminPanel">
+                <h3>إدارة فريق الموسم</h3>
+                <p>اختر أفضل 5 لاعبين للموسم</p>
+                <div class="tots-selection" id="totsSelection"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Match Edit Modal -->
+    <div class="modal" id="matchEditModal">
+        <div class="modal-overlay" onclick="closeMatchEdit()"></div>
+        <div class="modal-content match-edit-modal">
+            <button class="modal-close" onclick="closeMatchEdit()">&times;</button>
+            <div class="match-edit-content" id="matchEditContent">
+                <!-- Match edit form -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-icon">⚽</span>
+                    <span class="logo-text">STEM <span class="highlight">LEAGUE</span></span>
+                </div>
+                <p>بطولة STEM للمدارس © 2025</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
 </body>
 </html>

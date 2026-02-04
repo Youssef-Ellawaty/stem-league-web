@@ -17,6 +17,77 @@ let data = {
     }
 };
 
+// ============ PAGE NAVIGATION SYSTEM ============
+function showPage(pageName) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+    });
+    
+    // Remove active class from all nav links
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Show selected page
+    const pageId = pageName + '-page';
+    const page = document.getElementById(pageId);
+    if (page) {
+        page.classList.add('active');
+    }
+    
+    // Add active class to nav link
+    const activeLink = document.querySelector(`[onclick*="showPage('${pageName}')"]`);
+    if (activeLink) {
+        activeLink.classList.add('active');
+    }
+    
+    // Close mobile menu if open
+    closeMobileMenu();
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+}
+
+// ============ MOBILE MENU ============
+function toggleMobileMenu() {
+    const navLinks = document.getElementById('navLinks');
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    navLinks.classList.toggle('active');
+    menuBtn.classList.toggle('active');
+}
+
+function closeMobileMenu() {
+    const navLinks = document.getElementById('navLinks');
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    navLinks.classList.remove('active');
+    menuBtn.classList.remove('active');
+}
+
+// ============ MATCH TABS SWITCHING ============
+function switchMatchTab(button) {
+    // Remove active class from all tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Add active class to clicked tab
+    button.classList.add('active');
+    
+    // Hide all match lists
+    document.querySelectorAll('.matches-list').forEach(list => {
+        list.classList.add('hidden');
+    });
+    
+    // Show selected match list
+    const tabName = button.getAttribute('data-tab');
+    const listId = tabName + 'Matches';
+    const list = document.getElementById(listId);
+    if (list) {
+        list.classList.remove('hidden');
+    }
+}
+
 // Load data from localStorage
 function loadData() {
     const saved = localStorage.getItem('stemLeagueData');
@@ -32,6 +103,100 @@ function loadData() {
 // Save data to localStorage
 function saveData() {
     localStorage.setItem('stemLeagueData', JSON.stringify(data));
+    localStorage.setItem('stemLeagueLastUpdate', new Date().toISOString());
+    updateDataInfo();
+}
+
+// Update data info display
+function updateDataInfo() {
+    const lastUpdate = localStorage.getItem('stemLeagueLastUpdate');
+    const lastUpdateEl = document.getElementById('lastUpdateTime');
+    const dataSizeEl = document.getElementById('dataSize');
+    
+    if (lastUpdateEl && lastUpdate) {
+        const date = new Date(lastUpdate);
+        lastUpdateEl.textContent = date.toLocaleString('ar-EG', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+    
+    if (dataSizeEl) {
+        const dataStr = JSON.stringify(data);
+        const sizeInBytes = new Blob([dataStr]).size;
+        const sizeInKB = (sizeInBytes / 1024).toFixed(2);
+        dataSizeEl.textContent = sizeInKB + ' KB';
+    }
+}
+
+// Export data as JSON file
+function exportData() {
+    const dataStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'data.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Import data from JSON file
+function importData(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const importedData = JSON.parse(e.target.result);
+            
+            // Validate data structure
+            if (!importedData.teams || !importedData.players || !importedData.matches) {
+                alert('ملف غير صالح: تأكد من أن الملف يحتوي على البيانات الصحيحة');
+                return;
+            }
+            
+            if (confirm('هل تريد استبدال جميع البيانات الحالية بالبيانات المستوردة؟')) {
+                data = importedData;
+                saveData();
+                updateUI();
+                alert('تم استيراد البيانات بنجاح');
+            }
+        } catch (error) {
+            alert('خطأ في قراءة الملف: تأكد من أن الملف بصيغة JSON صحيحة');
+        }
+    };
+    reader.readAsText(file);
+    
+    // Reset input
+    input.value = '';
+}
+
+// Clear all data
+function clearAllData() {
+    if (confirm('هل أنت متأكد من حذف جميع البيانات؟ لا يمكن التراجع عن هذا الإجراء!')) {
+        if (confirm('تأكيد نهائي: سيتم حذف جميع الفرق واللاعبين والمباريات والأخبار!')) {
+            data = {
+                teams: [],
+                players: [],
+                matches: [],
+                rounds: [],
+                news: [],
+                tots: [],
+                standings: { A: [], B: [] }
+            };
+            saveData();
+            updateUI();
+            alert('تم مسح جميع البيانات');
+        }
+    }
 }
 
 // Initialize sample data
@@ -49,24 +214,17 @@ function initSampleData() {
     ];
 
     // Sample players - 5 players per team
-    // التشكيلات المتاحة (5 لاعبين):
-    // 1-1-2-1: حارس، مدافع، وسطين، مهاجم
-    // 1-2-1-1: حارس، مدافعين، وسط، مهاجم  
-    // 1-1-1-2: حارس، مدافع، وسط، مهاجمين
-    
     const teamFormations = {
-        // يمكنك تغيير التشكيلة لكل فريق هنا
-        1: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 1 }, { pos: 'MF', count: 2 }, { pos: 'FW', count: 1 }], // 1-1-2-1
-        2: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 2 }, { pos: 'MF', count: 1 }, { pos: 'FW', count: 1 }], // 1-2-1-1
-        3: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 1 }, { pos: 'MF', count: 1 }, { pos: 'FW', count: 2 }], // 1-1-1-2
-        4: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 1 }, { pos: 'MF', count: 2 }, { pos: 'FW', count: 1 }], // 1-1-2-1
-        5: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 2 }, { pos: 'MF', count: 1 }, { pos: 'FW', count: 1 }], // 1-2-1-1
-        6: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 1 }, { pos: 'MF', count: 1 }, { pos: 'FW', count: 2 }], // 1-1-1-2
-        7: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 1 }, { pos: 'MF', count: 2 }, { pos: 'FW', count: 1 }], // 1-1-2-1
-        8: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 2 }, { pos: 'MF', count: 1 }, { pos: 'FW', count: 1 }]  // 1-2-1-1
+        1: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 1 }, { pos: 'MF', count: 2 }, { pos: 'FW', count: 1 }],
+        2: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 2 }, { pos: 'MF', count: 1 }, { pos: 'FW', count: 1 }],
+        3: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 1 }, { pos: 'MF', count: 1 }, { pos: 'FW', count: 2 }],
+        4: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 1 }, { pos: 'MF', count: 2 }, { pos: 'FW', count: 1 }],
+        5: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 2 }, { pos: 'MF', count: 1 }, { pos: 'FW', count: 1 }],
+        6: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 1 }, { pos: 'MF', count: 1 }, { pos: 'FW', count: 2 }],
+        7: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 1 }, { pos: 'MF', count: 2 }, { pos: 'FW', count: 1 }],
+        8: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 2 }, { pos: 'MF', count: 1 }, { pos: 'FW', count: 1 }]
     };
     
-    // التشكيلة الافتراضية لأي فريق جديد
     const defaultFormation = [
         { pos: 'GK', count: 1 },
         { pos: 'DF', count: 1 },
@@ -260,6 +418,142 @@ function updateUI() {
     renderBracket();
     renderTOTS();
     renderAdminLists();
+    renderStatistics();
+    updateDataInfo();
+}
+
+// Render statistics page
+function renderStatistics() {
+    // Top Scorers
+    const topScorers = [...data.players]
+        .filter(p => p.goals > 0)
+        .sort((a, b) => b.goals - a.goals)
+        .slice(0, 10);
+    
+    const topScorersContainer = document.getElementById('topScorers');
+    if (topScorersContainer) {
+        topScorersContainer.innerHTML = topScorers.length === 0 
+            ? '<div class="stat-empty">لا توجد أهداف مسجلة بعد</div>'
+            : topScorers.map((player, index) => {
+                const team = data.teams.find(t => t.id === player.teamId);
+                return `
+                    <div class="stat-row" onclick="showPlayerCard(${player.id})">
+                        <span class="stat-rank ${index < 3 ? 'top-' + (index + 1) : ''}">${index + 1}</span>
+                        <div class="stat-player-info">
+                            <div class="stat-player-avatar">
+                                ${player.photo ? `<img src="${player.photo}" alt="${player.name}">` : player.number}
+                            </div>
+                            <div class="stat-player-details">
+                                <span class="stat-player-name">${player.name}</span>
+                                <span class="stat-player-team">${team?.name || ''}</span>
+                            </div>
+                        </div>
+                        <span class="stat-value goals">${player.goals}</span>
+                    </div>
+                `;
+            }).join('');
+    }
+    
+    // Top Assists
+    const topAssists = [...data.players]
+        .filter(p => p.assists > 0)
+        .sort((a, b) => b.assists - a.assists)
+        .slice(0, 10);
+    
+    const topAssistsContainer = document.getElementById('topAssists');
+    if (topAssistsContainer) {
+        topAssistsContainer.innerHTML = topAssists.length === 0 
+            ? '<div class="stat-empty">لا توجد تمريرات حاسمة بعد</div>'
+            : topAssists.map((player, index) => {
+                const team = data.teams.find(t => t.id === player.teamId);
+                return `
+                    <div class="stat-row" onclick="showPlayerCard(${player.id})">
+                        <span class="stat-rank ${index < 3 ? 'top-' + (index + 1) : ''}">${index + 1}</span>
+                        <div class="stat-player-info">
+                            <div class="stat-player-avatar">
+                                ${player.photo ? `<img src="${player.photo}" alt="${player.name}">` : player.number}
+                            </div>
+                            <div class="stat-player-details">
+                                <span class="stat-player-name">${player.name}</span>
+                                <span class="stat-player-team">${team?.name || ''}</span>
+                            </div>
+                        </div>
+                        <span class="stat-value assists">${player.assists}</span>
+                    </div>
+                `;
+            }).join('');
+    }
+    
+    // Calculate team stats from matches
+    const teamStats = {};
+    data.teams.forEach(team => {
+        teamStats[team.id] = {
+            teamId: team.id,
+            teamName: team.name,
+            logo: team.logo,
+            wins: 0,
+            cleanSheets: 0
+        };
+    });
+    
+    data.matches.filter(m => m.status === 'finished').forEach(match => {
+        // Count wins
+        if (match.score1 > match.score2) {
+            if (teamStats[match.team1Id]) teamStats[match.team1Id].wins++;
+        } else if (match.score2 > match.score1) {
+            if (teamStats[match.team2Id]) teamStats[match.team2Id].wins++;
+        }
+        
+        // Count clean sheets
+        if (match.score2 === 0 && teamStats[match.team1Id]) {
+            teamStats[match.team1Id].cleanSheets++;
+        }
+        if (match.score1 === 0 && teamStats[match.team2Id]) {
+            teamStats[match.team2Id].cleanSheets++;
+        }
+    });
+    
+    // Most Wins
+    const mostWins = Object.values(teamStats)
+        .filter(t => t.wins > 0)
+        .sort((a, b) => b.wins - a.wins);
+    
+    const mostWinsContainer = document.getElementById('mostWins');
+    if (mostWinsContainer) {
+        mostWinsContainer.innerHTML = mostWins.length === 0 
+            ? '<div class="stat-empty">لا توجد انتصارات بعد</div>'
+            : mostWins.map((team, index) => `
+                <div class="stat-row team-row">
+                    <span class="stat-rank ${index < 3 ? 'top-' + (index + 1) : ''}">${index + 1}</span>
+                    <div class="stat-team-info">
+                        <div class="stat-team-logo">${team.logo}</div>
+                        <span class="stat-team-name">${team.teamName}</span>
+                    </div>
+                    <span class="stat-value wins">${team.wins}</span>
+                </div>
+            `).join('');
+    }
+    
+    // Most Clean Sheets
+    const mostCleanSheets = Object.values(teamStats)
+        .filter(t => t.cleanSheets > 0)
+        .sort((a, b) => b.cleanSheets - a.cleanSheets);
+    
+    const cleanSheetsContainer = document.getElementById('mostCleanSheets');
+    if (cleanSheetsContainer) {
+        cleanSheetsContainer.innerHTML = mostCleanSheets.length === 0 
+            ? '<div class="stat-empty">لا توجد شباك نظيفة بعد</div>'
+            : mostCleanSheets.map((team, index) => `
+                <div class="stat-row team-row">
+                    <span class="stat-rank ${index < 3 ? 'top-' + (index + 1) : ''}">${index + 1}</span>
+                    <div class="stat-team-info">
+                        <div class="stat-team-logo">${team.logo}</div>
+                        <span class="stat-team-name">${team.teamName}</span>
+                    </div>
+                    <span class="stat-value clean-sheets">${team.cleanSheets}</span>
+                </div>
+            `).join('');
+    }
 }
 
 // Update hero stats
@@ -273,27 +567,33 @@ function updateStats() {
 
 // Render news
 function renderNews() {
-    const grid = document.getElementById('newsGrid');
+    const homeGrid = document.getElementById('homeNewsGrid');
+    
     if (data.news.length === 0) {
-        grid.innerHTML = `
+        const emptyHtml = `
             <div class="empty-state">
                 <div class="empty-state-icon">📰</div>
                 <p class="empty-state-text">لا توجد أخبار حالياً</p>
             </div>
         `;
+        if (homeGrid) homeGrid.innerHTML = emptyHtml;
         return;
     }
     
-    grid.innerHTML = data.news.map(news => `
-        <div class="news-card">
-            <img src="${news.image}" alt="${news.title}" class="news-image" onerror="this.src='https://via.placeholder.com/400x220/1a472a/ffffff?text=STEM+League'">
+    const newsHtml = data.news.map(news => `
+        <article class="news-card">
+            <div style="overflow: hidden; border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
+                <img src="${news.image}" alt="${news.title}" class="news-image" onerror="this.src='https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=400&fit=crop'" loading="lazy">
+            </div>
             <div class="news-content">
-                <div class="news-date">${formatDate(news.date)}</div>
+                <time class="news-date">${formatDate(news.date)}</time>
                 <h3 class="news-title">${news.title}</h3>
                 <p class="news-excerpt">${news.content}</p>
             </div>
-        </div>
+        </article>
     `).join('');
+    
+    if (homeGrid) homeGrid.innerHTML = newsHtml;
 }
 
 // Render matches
@@ -323,7 +623,7 @@ function renderMatchList(matches, emptyText) {
         const round = data.rounds.find(r => r.id === match.roundId);
         
         return `
-            <div class="match-card" onclick="showMatchDetails(${match.id})">
+            <article class="match-card" onclick="showMatchDetails(${match.id})" tabindex="0" role="button" aria-label="عرض تفاصيل المباراة">
                 <div class="match-header">
                     <span class="match-round">${round ? round.name : ''}</span>
                     <span class="match-status ${match.status}">${getStatusText(match.status)}</span>
@@ -348,7 +648,7 @@ function renderMatchList(matches, emptyText) {
                     </div>
                 </div>
                 <div class="match-time">${formatDateTime(match.date)}</div>
-            </div>
+            </article>
         `;
     }).join('');
 }
@@ -384,7 +684,7 @@ function renderTeamFormation(teamId) {
     const formation = document.getElementById('playersFormation');
     const teamPlayers = data.players.filter(p => p.teamId === teamId);
     
-    // حساب عدد اللاعبين في كل مركز
+    // Calculate position counts
     const positionCounts = {
         GK: teamPlayers.filter(p => p.position === 'GK').length,
         DF: teamPlayers.filter(p => p.position === 'DF').length,
@@ -392,7 +692,7 @@ function renderTeamFormation(teamId) {
         FW: teamPlayers.filter(p => p.position === 'FW').length
     };
     
-    // إحداثيات ديناميكية بناءً على عدد اللاعبين في كل مركز
+    // Dynamic coordinates based on player count per position
     function getPositionCoords(position, count) {
         const coords = {
             GK: {
@@ -425,8 +725,10 @@ function renderTeamFormation(teamId) {
         if (!coords || !coords[index]) return '';
         
         return `
-            <div class="player-spot" style="left: ${coords[index].left}; top: ${coords[index].top}; transform: translate(-50%, -50%);" onclick="showPlayerCard(${player.id})">
-                <div class="player-avatar">${player.number}</div>
+            <div class="player-spot" style="left: ${coords[index].left}; top: ${coords[index].top}; transform: translate(-50%, -50%);" onclick="showPlayerCard(${player.id})" tabindex="0" role="button" aria-label="عرض بطاقة ${player.name}">
+                <div class="player-avatar">
+                    ${player.photo ? `<img src="${player.photo}" alt="${player.name}" class="player-field-photo">` : `<span>${player.number}</span>`}
+                </div>
                 <div class="player-name">${player.name}</div>
                 <div class="player-position-badge">${getPositionName(player.position)}</div>
             </div>
@@ -528,7 +830,7 @@ function renderTOTS() {
         const team = data.teams.find(t => t.id === player.teamId);
         
         return `
-            <div class="tots-card" onclick="showPlayerCard(${player.id})">
+            <div class="tots-card" onclick="showPlayerCard(${player.id})" tabindex="0" role="button" aria-label="عرض بطاقة ${player.name}">
                 <div class="tots-avatar">${player.number}</div>
                 <div class="tots-name">${player.name}</div>
                 <div class="tots-position">${getPositionName(player.position)}</div>
@@ -545,8 +847,10 @@ function showPlayerCard(playerId) {
     const team = data.teams.find(t => t.id === player.teamId);
     
     document.getElementById('playerCardContent').innerHTML = `
-        <div class="player-card-avatar">${player.number}</div>
-        <h2 class="player-card-name">${player.name}</h2>
+        <div class="player-card-avatar">
+            ${player.photo ? `<img src="${player.photo}" alt="${player.name}" class="player-photo">` : `<span class="player-number-display">${player.number}</span>`}
+        </div>
+        <h2 class="player-card-name" id="playerModalTitle">${player.name}</h2>
         <p class="player-card-team">${team ? team.name : ''}</p>
         <p class="player-card-position">${getPositionName(player.position)}</p>
         <div class="player-stats">
@@ -562,14 +866,20 @@ function showPlayerCard(playerId) {
                 <div class="player-stat-value">${player.yellowCards}</div>
                 <div class="player-stat-label">🟨 إنذارات</div>
             </div>
+            <div class="player-stat">
+                <div class="player-stat-value">${player.redCards}</div>
+                <div class="player-stat-label">🟥 طرد</div>
+            </div>
         </div>
     `;
     
     document.getElementById('playerModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
 function closePlayerModal() {
     document.getElementById('playerModal').classList.remove('active');
+    document.body.style.overflow = '';
 }
 
 // Match details modal
@@ -580,19 +890,69 @@ function showMatchDetails(matchId) {
     const team1 = data.teams.find(t => t.id === match.team1Id);
     const team2 = data.teams.find(t => t.id === match.team2Id);
     
-    let eventsHtml = '';
+    // Separate events by team and type
+    const team1Goals = [];
+    const team2Goals = [];
+    const otherEvents = [];
+    
     if (match.events && match.events.length > 0) {
+        match.events.forEach(event => {
+            const player = data.players.find(p => p.id === event.playerId);
+            if (player) {
+                if (event.type === 'goal') {
+                    if (player.teamId === match.team1Id) {
+                        team1Goals.push({ ...event, player });
+                    } else {
+                        team2Goals.push({ ...event, player });
+                    }
+                } else {
+                    otherEvents.push({ ...event, player });
+                }
+            }
+        });
+    }
+    
+    // Build scorers display
+    let scorersHtml = '';
+    if (team1Goals.length > 0 || team2Goals.length > 0) {
+        scorersHtml = `
+            <div class="match-scorers">
+                <div class="scorers-team">
+                    ${team1Goals.map(g => `
+                        <div class="scorer-item">
+                            <span class="scorer-name">${g.player.name}</span>
+                            <span class="scorer-minute">${g.minute}'</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="scorers-divider">⚽</div>
+                <div class="scorers-team">
+                    ${team2Goals.map(g => `
+                        <div class="scorer-item">
+                            <span class="scorer-minute">${g.minute}'</span>
+                            <span class="scorer-name">${g.player.name}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+    
+    // Build other events display
+    let eventsHtml = '';
+    if (otherEvents.length > 0) {
         eventsHtml = `
             <div class="match-events">
-                <h4>أحداث المباراة</h4>
-                ${match.events.map(event => {
-                    const player = data.players.find(p => p.id === event.playerId);
-                    const eventIcon = event.type === 'goal' ? '⚽' : event.type === 'assist' ? '👟' : event.type === 'yellowCard' ? '🟨' : '🟥';
+                <h4>أحداث أخرى</h4>
+                ${otherEvents.map(event => {
+                    const eventIcon = event.type === 'assist' ? '👟' : event.type === 'yellowCard' ? '🟨' : '🟥';
+                    const eventLabel = event.type === 'assist' ? 'تمريرة حاسمة' : event.type === 'yellowCard' ? 'إنذار' : 'طرد';
                     return `
                         <div class="event-item">
                             <span class="event-icon">${eventIcon}</span>
                             <span class="event-time">${event.minute}'</span>
-                            <span class="event-player">${player ? player.name : 'لاعب'}</span>
+                            <span class="event-player">${event.player.name}</span>
+                            <span class="event-label">${eventLabel}</span>
                         </div>
                     `;
                 }).join('')}
@@ -600,7 +960,15 @@ function showMatchDetails(matchId) {
         `;
     }
     
+    // Match status badge
+    const statusBadge = match.status === 'live' 
+        ? '<div class="match-status-badge live">🔴 جارية</div>'
+        : match.status === 'finished' 
+        ? '<div class="match-status-badge finished">انتهت</div>'
+        : '<div class="match-status-badge upcoming">لم تُلعب</div>';
+    
     document.getElementById('matchDetails').innerHTML = `
+        ${statusBadge}
         <div class="match-details-header">
             <div class="match-details-team">
                 <div class="match-details-logo">${team1 ? team1.logo : '⚽'}</div>
@@ -612,15 +980,18 @@ function showMatchDetails(matchId) {
                 <div class="match-details-name">${team2 ? team2.name : 'فريق 2'}</div>
             </div>
         </div>
-        <p style="color: var(--text-secondary);">${formatDateTime(match.date)}</p>
+        <p style="color: var(--text-secondary); margin-bottom: 16px; text-align: center;">${formatDateTime(match.date)}</p>
+        ${scorersHtml}
         ${eventsHtml}
     `;
     
     document.getElementById('matchModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
 function closeMatchModal() {
     document.getElementById('matchModal').classList.remove('active');
+    document.body.style.overflow = '';
 }
 
 // Admin functions
@@ -628,10 +999,12 @@ function openAdminLogin() {
     document.getElementById('adminLoginModal').classList.add('active');
     document.getElementById('adminPassword').value = '';
     document.getElementById('loginError').textContent = '';
+    document.body.style.overflow = 'hidden';
 }
 
 function closeAdminLogin() {
     document.getElementById('adminLoginModal').classList.remove('active');
+    document.body.style.overflow = '';
 }
 
 function loginAdmin() {
@@ -646,11 +1019,13 @@ function loginAdmin() {
 
 function openAdminPanel() {
     document.getElementById('adminPanel').classList.add('active');
+    document.body.style.overflow = 'hidden';
     renderAdminLists();
 }
 
 function closeAdminPanel() {
     document.getElementById('adminPanel').classList.remove('active');
+    document.body.style.overflow = '';
 }
 
 // Admin tabs
@@ -903,10 +1278,12 @@ function editMatch(matchId) {
     `;
     
     document.getElementById('matchEditModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
 function closeMatchEdit() {
     document.getElementById('matchEditModal').classList.remove('active');
+    document.body.style.overflow = '';
 }
 
 function addMatchEvent(matchId) {
@@ -1004,6 +1381,7 @@ function addPlayer() {
     const name = document.getElementById('playerName').value.trim();
     const position = document.getElementById('playerPosition').value;
     const number = parseInt(document.getElementById('playerNumber').value);
+    const photo = document.getElementById('playerPhoto')?.value.trim() || '';
     
     if (!teamId || !name || !position || !number) {
         return alert('أكمل جميع البيانات');
@@ -1016,6 +1394,7 @@ function addPlayer() {
         name,
         position,
         number,
+        photo,
         goals: 0,
         assists: 0,
         yellowCards: 0,
@@ -1025,13 +1404,73 @@ function addPlayer() {
     saveData();
     document.getElementById('playerName').value = '';
     document.getElementById('playerNumber').value = '';
+    if (document.getElementById('playerPhoto')) {
+        document.getElementById('playerPhoto').value = '';
+    }
     renderAdminLists();
+}
+
+// Image source toggle state
+let currentImageSource = 'url';
+let uploadedImageData = null;
+
+function toggleImageSource(source) {
+    currentImageSource = source;
+    
+    // Update toggle buttons
+    document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+    const activeBtn = document.querySelector(`.toggle-btn[onclick*="${source}"]`);
+    if (activeBtn) activeBtn.classList.add('active');
+    
+    // Show/hide inputs
+    const urlInput = document.getElementById('imageUrlInput');
+    const fileInput = document.getElementById('imageFileInput');
+    
+    if (source === 'url') {
+        if (urlInput) urlInput.classList.remove('hidden');
+        if (fileInput) fileInput.classList.add('hidden');
+    } else {
+        if (urlInput) urlInput.classList.add('hidden');
+        if (fileInput) fileInput.classList.remove('hidden');
+    }
+}
+
+function handleImageUpload(input) {
+    const file = input.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            uploadedImageData = e.target.result;
+            const preview = document.getElementById('imagePreview');
+            const previewImg = document.getElementById('previewImg');
+            if (previewImg) previewImg.src = uploadedImageData;
+            if (preview) preview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function removeImagePreview() {
+    uploadedImageData = null;
+    const fileInput = document.getElementById('newsImageFile');
+    const preview = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+    
+    if (fileInput) fileInput.value = '';
+    if (preview) preview.classList.add('hidden');
+    if (previewImg) previewImg.src = '';
 }
 
 function addNews() {
     const title = document.getElementById('newsTitle').value.trim();
     const content = document.getElementById('newsContent').value.trim();
-    const image = document.getElementById('newsImage').value.trim();
+    
+    let image = '';
+    if (currentImageSource === 'url') {
+        image = document.getElementById('newsImage').value.trim();
+    } else {
+        image = uploadedImageData || '';
+    }
     
     if (!title || !content) {
         return alert('أدخل العنوان والمحتوى');
@@ -1040,12 +1479,22 @@ function addNews() {
     const id = Date.now();
     const date = new Date().toISOString().split('T')[0];
     
-    data.news.unshift({ id, title, content, image: image || 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800', date });
+    data.news.unshift({ 
+        id, 
+        title, 
+        content, 
+        image: image || 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800', 
+        date 
+    });
     
     saveData();
+    
+    // Reset form
     document.getElementById('newsTitle').value = '';
     document.getElementById('newsContent').value = '';
     document.getElementById('newsImage').value = '';
+    removeImagePreview();
+    
     updateUI();
 }
 
@@ -1054,6 +1503,19 @@ function deleteNews(id) {
     data.news = data.news.filter(n => n.id !== id);
     saveData();
     updateUI();
+}
+
+// ============ TEAM SELECTION ============
+function selectTeam(teamId) {
+    if (!teamId) {
+        document.getElementById('playersFormation').innerHTML = '';
+        return;
+    }
+    
+    const team = data.teams.find(t => t.id == teamId);
+    if (!team) return;
+    
+    renderTeamFormation(parseInt(teamId));
 }
 
 function toggleTOTS(playerId) {
@@ -1086,19 +1548,27 @@ function formatDateTime(dateStr) {
     });
 }
 
-// Smooth scroll for nav links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+// Navbar scroll effect
+window.addEventListener('scroll', function() {
+    const navbar = document.getElementById('navbar');
+    if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+});
+
+// Close modals on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closePlayerModal();
+        closeMatchModal();
+        closeAdminLogin();
+        closeMatchEdit();
+        if (document.getElementById('adminPanel').classList.contains('active')) {
+            closeAdminPanel();
         }
-        
-        // Update active nav link
-        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-        this.classList.add('active');
-    });
+    }
 });
 
 // Initialize on load

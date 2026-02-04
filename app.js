@@ -1,8 +1,9 @@
 // STEM League - Championship App
-// Data Storage using localStorage
+// Data Storage using Server API (data.json)
 
 // Initialize data
 const ADMIN_PASSWORD = 'stemleague2025';
+const API_BASE = '/api';
 
 let data = {
     teams: [],
@@ -88,28 +89,71 @@ function switchMatchTab(button) {
     }
 }
 
-// Load data from localStorage
-function loadData() {
-    const saved = localStorage.getItem('stemLeagueData');
-    if (saved) {
-        data = JSON.parse(saved);
-    } else {
-        // Initialize with sample data
-        initSampleData();
+// Load data from server API
+async function loadData() {
+    try {
+        const response = await fetch(`${API_BASE}/data`);
+        if (response.ok) {
+            const serverData = await response.json();
+            // Check if server has data
+            if (serverData.teams && serverData.teams.length > 0) {
+                data = serverData;
+            } else {
+                // Initialize with sample data if server is empty
+                initSampleData();
+            }
+        } else {
+            // Fallback: try to load from localStorage
+            const saved = localStorage.getItem('stemLeagueData');
+            if (saved) {
+                data = JSON.parse(saved);
+            } else {
+                initSampleData();
+            }
+        }
+    } catch (error) {
+        console.error('Error loading data from server:', error);
+        // Fallback to localStorage
+        const saved = localStorage.getItem('stemLeagueData');
+        if (saved) {
+            data = JSON.parse(saved);
+        } else {
+            initSampleData();
+        }
     }
     updateUI();
 }
 
-// Save data to localStorage
-function saveData() {
-    localStorage.setItem('stemLeagueData', JSON.stringify(data));
-    localStorage.setItem('stemLeagueLastUpdate', new Date().toISOString());
+// Save data to server API
+async function saveData() {
+    try {
+        const response = await fetch(`${API_BASE}/data`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to save to server');
+        }
+        
+        // Also save to localStorage as backup
+        localStorage.setItem('stemLeagueData', JSON.stringify(data));
+        localStorage.setItem('stemLeagueLastUpdate', new Date().toISOString());
+    } catch (error) {
+        console.error('Error saving data to server:', error);
+        // Fallback: save to localStorage only
+        localStorage.setItem('stemLeagueData', JSON.stringify(data));
+        localStorage.setItem('stemLeagueLastUpdate', new Date().toISOString());
+    }
     updateDataInfo();
 }
 
 // Update data info display
 function updateDataInfo() {
-    const lastUpdate = localStorage.getItem('stemLeagueLastUpdate');
+    const lastUpdate = data.lastUpdate || localStorage.getItem('stemLeagueLastUpdate');
     const lastUpdateEl = document.getElementById('lastUpdateTime');
     const dataSizeEl = document.getElementById('dataSize');
     
@@ -148,12 +192,12 @@ function exportData() {
 }
 
 // Import data from JSON file
-function importData(input) {
+async function importData(input) {
     const file = input.files[0];
     if (!file) return;
     
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = async function(e) {
         try {
             const importedData = JSON.parse(e.target.result);
             
@@ -165,7 +209,7 @@ function importData(input) {
             
             if (confirm('هل تريد استبدال جميع البيانات الحالية بالبيانات المستوردة؟')) {
                 data = importedData;
-                saveData();
+                await saveData();
                 updateUI();
                 alert('تم استيراد البيانات بنجاح');
             }
@@ -180,7 +224,7 @@ function importData(input) {
 }
 
 // Clear all data
-function clearAllData() {
+async function clearAllData() {
     if (confirm('هل أنت متأكد من حذف جميع البيانات؟ لا يمكن التراجع عن هذا الإجراء!')) {
         if (confirm('تأكيد نهائي: سيتم حذف جميع الفرق واللاعبين والمباريات والأخبار!')) {
             data = {
@@ -192,7 +236,7 @@ function clearAllData() {
                 tots: [],
                 standings: { A: [], B: [] }
             };
-            saveData();
+            await saveData();
             updateUI();
             alert('تم مسح جميع البيانات');
         }
@@ -201,133 +245,95 @@ function clearAllData() {
 
 // Initialize sample data
 function initSampleData() {
-    // Sample teams
+    // Real teams
     data.teams = [
-        { id: 1, name: 'فريق الصقور', group: 'A', logo: '🦅' },
-        { id: 2, name: 'فريق النجوم', group: 'A', logo: '⭐' },
-        { id: 3, name: 'فريق الأسود', group: 'A', logo: '🦁' },
-        { id: 4, name: 'فريق النسور', group: 'A', logo: '🦅' },
-        { id: 5, name: 'فريق الفهود', group: 'B', logo: '🐆' },
-        { id: 6, name: 'فريق الذئاب', group: 'B', logo: '🐺' },
-        { id: 7, name: 'فريق العقبان', group: 'B', logo: '🦅' },
-        { id: 8, name: 'فريق الأبطال', group: 'B', logo: '🏆' }
+        { id: 1, name: 'King', group: 'A', logo: '👑' },
+        { id: 2, name: 'صيادين البرايز', group: 'A', logo: '🎯' },
+        { id: 3, name: 'Koom Elzawany Pro', group: 'A', logo: '🔥' },
+        { id: 4, name: 'خدتك عليه', group: 'A', logo: '💪' },
+        { id: 5, name: 'Kong', group: 'B', logo: '🦍' },
+        { id: 6, name: '7enkesh FC', group: 'B', logo: '⚡' },
+        { id: 7, name: 'جبناهم فيك', group: 'B', logo: '🏆' },
+        { id: 8, name: 'خليها على الله', group: 'B', logo: '🌟' }
     ];
 
-    // Sample players - 5 players per team
-    const teamFormations = {
-        1: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 1 }, { pos: 'MF', count: 2 }, { pos: 'FW', count: 1 }],
-        2: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 2 }, { pos: 'MF', count: 1 }, { pos: 'FW', count: 1 }],
-        3: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 1 }, { pos: 'MF', count: 1 }, { pos: 'FW', count: 2 }],
-        4: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 1 }, { pos: 'MF', count: 2 }, { pos: 'FW', count: 1 }],
-        5: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 2 }, { pos: 'MF', count: 1 }, { pos: 'FW', count: 1 }],
-        6: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 1 }, { pos: 'MF', count: 1 }, { pos: 'FW', count: 2 }],
-        7: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 1 }, { pos: 'MF', count: 2 }, { pos: 'FW', count: 1 }],
-        8: [{ pos: 'GK', count: 1 }, { pos: 'DF', count: 2 }, { pos: 'MF', count: 1 }, { pos: 'FW', count: 1 }]
-    };
-    
-    const defaultFormation = [
-        { pos: 'GK', count: 1 },
-        { pos: 'DF', count: 1 },
-        { pos: 'MF', count: 2 },
-        { pos: 'FW', count: 1 }
+    // Real players with their actual positions
+    data.players = [
+        // Team 1: King
+        { id: 1, teamId: 1, name: 'Ahmed Maher', position: 'FW', number: 9, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 2, teamId: 1, name: 'Mohamed Elmasry', position: 'MF', number: 8, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 3, teamId: 1, name: 'Mahmoud Saber', position: 'DF', number: 4, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 4, teamId: 1, name: 'Omar Bona', position: 'MF', number: 10, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 5, teamId: 1, name: 'ELdegwy', position: 'GK', number: 1, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        
+        // Team 2: صيادين البرايز
+        { id: 6, teamId: 2, name: 'Amr Mohamed', position: 'MF', number: 8, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 7, teamId: 2, name: 'Yassin Hossam', position: 'FW', number: 9, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 8, teamId: 2, name: 'Hamo Ayman', position: 'MF', number: 10, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 9, teamId: 2, name: 'Ali Elsaqa', position: 'DF', number: 4, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 10, teamId: 2, name: 'Youssef Ragab', position: 'GK', number: 1, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        
+        // Team 3: Koom Elzawany Pro
+        { id: 11, teamId: 3, name: 'Mohamed Ashraf', position: 'FW', number: 9, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 12, teamId: 3, name: 'Sherbo', position: 'MF', number: 8, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 13, teamId: 3, name: 'Omar Farag', position: 'DF', number: 4, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 14, teamId: 3, name: 'Ali Arada', position: 'DF', number: 5, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 15, teamId: 3, name: 'Ammar', position: 'GK', number: 1, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        
+        // Team 4: خدتك عليه
+        { id: 16, teamId: 4, name: 'Eyad', position: 'FW', number: 9, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 17, teamId: 4, name: '3ayad', position: 'MF', number: 8, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 18, teamId: 4, name: 'Zar3a', position: 'DF', number: 4, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 19, teamId: 4, name: '7anafy', position: 'DF', number: 5, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 20, teamId: 4, name: '7omos', position: 'GK', number: 1, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        
+        // Team 5: Kong
+        { id: 21, teamId: 5, name: 'Mo Yasser', position: 'MF', number: 8, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 22, teamId: 5, name: 'AbdelKareem', position: 'FW', number: 9, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 23, teamId: 5, name: 'Ellawaty', position: 'DF', number: 4, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 24, teamId: 5, name: 'Karezma', position: 'DF', number: 5, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 25, teamId: 5, name: 'El4arqawy', position: 'GK', number: 1, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        
+        // Team 6: 7enkesh FC
+        { id: 26, teamId: 6, name: 'Zoz AbdelKareem', position: 'FW', number: 9, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 27, teamId: 6, name: 'Tharwat', position: 'MF', number: 8, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 28, teamId: 6, name: 'A7med Ayman', position: 'MF', number: 10, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 29, teamId: 6, name: 'Osos', position: 'DF', number: 4, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 30, teamId: 6, name: 'Bahrawy', position: 'GK', number: 1, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        
+        // Team 7: جبناهم فيك
+        { id: 31, teamId: 7, name: 'Bavly Remon', position: 'FW', number: 9, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 32, teamId: 7, name: 'Salem', position: 'FW', number: 11, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 33, teamId: 7, name: 'Turkey', position: 'MF', number: 8, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 34, teamId: 7, name: 'Omar Kamal', position: 'DF', number: 4, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 35, teamId: 7, name: 'A7med Reda', position: 'GK', number: 1, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        
+        // Team 8: خليها على الله
+        { id: 36, teamId: 8, name: 'Omar Tamer', position: 'FW', number: 9, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 37, teamId: 8, name: 'Seif', position: 'MF', number: 8, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 38, teamId: 8, name: 'M3z', position: 'MF', number: 10, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 39, teamId: 8, name: 'Youssef Ali', position: 'DF', number: 4, goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 40, teamId: 8, name: 'George Remon', position: 'GK', number: 1, goals: 0, assists: 0, yellowCards: 0, redCards: 0 }
     ];
 
-    const playerNames = [
-        'أحمد محمد', 'محمد علي', 'عمر حسن', 'يوسف إبراهيم', 'خالد أحمد'
-    ];
-
-    let playerId = 1;
-    data.teams.forEach(team => {
-        let playerIndex = 0;
-        const formation = teamFormations[team.id] || defaultFormation;
-        formation.forEach(({ pos, count }) => {
-            for (let i = 0; i < count; i++) {
-                data.players.push({
-                    id: playerId++,
-                    teamId: team.id,
-                    name: playerNames[playerIndex % playerNames.length],
-                    position: pos,
-                    number: playerIndex + 1,
-                    goals: 0,
-                    assists: 0,
-                    yellowCards: 0,
-                    redCards: 0
-                });
-                playerIndex++;
-            }
-        });
-    });
-
-    // Sample rounds
+    // Rounds
     data.rounds = [
         { id: 1, name: 'الجولة الأولى' },
         { id: 2, name: 'الجولة الثانية' },
         { id: 3, name: 'الجولة الثالثة' }
     ];
 
-    // Sample matches
-    data.matches = [
-        {
-            id: 1,
-            roundId: 1,
-            team1Id: 1,
-            team2Id: 2,
-            score1: 2,
-            score2: 1,
-            date: '2025-02-10T15:00',
-            status: 'finished',
-            events: [
-                { type: 'goal', playerId: 1, minute: 23 },
-                { type: 'goal', playerId: 2, minute: 45 },
-                { type: 'goal', playerId: 6, minute: 67 }
-            ]
-        },
-        {
-            id: 2,
-            roundId: 1,
-            team1Id: 3,
-            team2Id: 4,
-            score1: 0,
-            score2: 0,
-            date: '2025-02-10T17:00',
-            status: 'upcoming',
-            events: []
-        },
-        {
-            id: 3,
-            roundId: 1,
-            team1Id: 5,
-            team2Id: 6,
-            score1: 1,
-            score2: 1,
-            date: '2025-02-11T15:00',
-            status: 'live',
-            events: []
-        }
-    ];
+    // Empty matches - to be added by admin
+    data.matches = [];
 
-    // Sample news
+    // Welcome news
     data.news = [
         {
             id: 1,
             title: 'انطلاق بطولة STEM League للموسم الجديد',
-            content: 'تنطلق اليوم فعاليات بطولة STEM League في موسمها الجديد بمشاركة 8 فرق من أفضل مدارس STEM في المنطقة.',
+            content: 'تنطلق اليوم فعاليات بطولة STEM League في موسمها الجديد بمشاركة 8 فرق متنافسة على اللقب.',
             image: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800',
             date: '2025-02-01'
-        },
-        {
-            id: 2,
-            title: 'فريق الصقور يحقق الفوز في المباراة الافتتاحية',
-            content: 'حقق فريق الصقور فوزاً مستحقاً على فريق النجوم بنتيجة 2-1 في المباراة الافتتاحية للبطولة.',
-            image: 'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=800',
-            date: '2025-02-10'
-        },
-        {
-            id: 3,
-            title: 'تألق اللاعبين الشباب في الجولة الأولى',
-            content: 'أظهر اللاعبون الشباب مستوى رائعاً في مباريات الجولة الأولى مما يبشر بموسم مثير.',
-            image: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=800',
-            date: '2025-02-12'
         }
     ];
 

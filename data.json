@@ -1,12 +1,72 @@
 {
-    "teams": [],
-    "players": [],
-    "matches": [],
-    "rounds": [],
-    "news": [],
-    "tots": [],
-    "standings": {
-        "A": [],
-        "B": []
+  "teams": [
+    { "id": 1, "name": "King", "group": "A", "logo": "👑" },
+    { "id": 2, "name": "صيادين البرايز", "group": "A", "logo": "🎯" },
+    { "id": 3, "name": "Koom Elzawany Pro", "group": "A", "logo": "🔥" },
+    { "id": 4, "name": "خدتك عليه", "group": "A", "logo": "💪" },
+    { "id": 5, "name": "Kong", "group": "B", "logo": "🦍" },
+    { "id": 6, "name": "7enkesh FC", "group": "B", "logo": "⚡" },
+    { "id": 7, "name": "جبناهم فيك", "group": "B", "logo": "🏆" },
+    { "id": 8, "name": "خليها على الله", "group": "B", "logo": "🌟" }
+  ],
+  "players": [
+    { "id": 1, "teamId": 1, "name": "Ahmed Maher", "position": "FW", "number": 9, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 2, "teamId": 1, "name": "Mohamed Elmasry", "position": "MF", "number": 8, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 3, "teamId": 1, "name": "Mahmoud Saber", "position": "DF", "number": 4, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 4, "teamId": 1, "name": "Omar Bona", "position": "MF", "number": 10, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 5, "teamId": 1, "name": "ELdegwy", "position": "GK", "number": 1, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 6, "teamId": 2, "name": "Amr Mohamed", "position": "MF", "number": 8, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 7, "teamId": 2, "name": "Yassin Hossam", "position": "FW", "number": 9, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 8, "teamId": 2, "name": "Hamo Ayman", "position": "MF", "number": 10, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 9, "teamId": 2, "name": "Ali Elsaqa", "position": "DF", "number": 4, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 10, "teamId": 2, "name": "Youssef Ragab", "position": "GK", "number": 1, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 11, "teamId": 3, "name": "Mohamed Ashraf", "position": "FW", "number": 9, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 12, "teamId": 3, "name": "Sherbo", "position": "MF", "number": 8, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 13, "teamId": 3, "name": "Omar Farag", "position": "DF", "number": 4, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 14, "teamId": 3, "name": "Ali Arada", "position": "DF", "number": 5, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 15, "teamId": 3, "name": "Ammar", "position": "GK", "number": 1, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 16, "teamId": 4, "name": "Eyad", "position": "FW", "number": 9, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 17, "teamId": 4, "name": "3ayad", "position": "MF", "number": 8, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 18, "teamId": 4, "name": "Zar3a", "position": "DF", "number": 4, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 19, "teamId": 4, "name": "7anafy", "position": "DF", "number": 5, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 20, "teamId": 4, "name": "7omos", "position": "GK", "number": 1, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 21, "teamId": 5, "name": "Mo Yasser", "position": "MF", "number": 8, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 22, "teamId": 5, "name": "AbdelKareem", "position": "FW", "number": 9, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 23, "teamId": 5, "name": "Ellawaty", "position": "DF", "number": 4, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 24, "teamId": 5, "name": "Karezma", "position": "DF", "number": 5, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 25, "teamId": 5, "name": "El4arqawy", "position": "GK", "number": 1, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 26, "teamId": 6, "name": "Zoz AbdelKareem", "position": "FW", "number": 9, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 27, "teamId": 6, "name": "Tharwat", "position": "MF", "number": 8, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 28, "teamId": 6, "name": "A7med Ayman", "position": "MF", "number": 10, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 29, "teamId": 6, "name": "Osos", "position": "DF", "number": 4, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 30, "teamId": 6, "name": "Bahrawy", "position": "GK", "number": 1, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 31, "teamId": 7, "name": "Bavly Remon", "position": "FW", "number": 9, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 32, "teamId": 7, "name": "Salem", "position": "FW", "number": 11, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 33, "teamId": 7, "name": "Turkey", "position": "MF", "number": 8, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 34, "teamId": 7, "name": "Omar Kamal", "position": "DF", "number": 4, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 35, "teamId": 7, "name": "A7med Reda", "position": "GK", "number": 1, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 36, "teamId": 8, "name": "Omar Tamer", "position": "FW", "number": 9, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 37, "teamId": 8, "name": "Seif", "position": "MF", "number": 8, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 38, "teamId": 8, "name": "M3z", "position": "MF", "number": 10, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 39, "teamId": 8, "name": "Youssef Ali", "position": "DF", "number": 4, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 },
+    { "id": 40, "teamId": 8, "name": "George Remon", "position": "GK", "number": 1, "goals": 0, "assists": 0, "yellowCards": 0, "redCards": 0 }
+  ],
+  "matches": [],
+  "rounds": [
+    { "id": 1, "name": "الجولة الأولى" },
+    { "id": 2, "name": "الجولة الثانية" },
+    { "id": 3, "name": "الجولة الثالثة" }
+  ],
+  "news": [
+    {
+      "id": 1,
+      "title": "انطلاق بطولة STEM League للموسم الجديد",
+      "content": "تنطلق اليوم فعاليات بطولة STEM League في موسمها الجديد بمشاركة 8 فرق متنافسة على اللقب.",
+      "image": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
+      "date": "2025-02-01"
     }
+  ],
+  "tots": [],
+  "standings": { "A": [], "B": [] },
+  "lastUpdate": "2025-02-01T00:00:00.000Z"
 }

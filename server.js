@@ -2,24 +2,35 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = process.env.PORT || 3000;
-const DATA_FILE = path.join(__dirname, 'public', 'data.json');
+const PORT = process.env.PORT || 3002;
+const DATA_FILE = path.join(__dirname, 'data.json');
 
 // Initialize data file if it doesn't exist
 function initDataFile() {
-    if (!fs.existsSync(DATA_FILE)) {
-        const initialData = {
-            teams: [],
-            players: [],
-            matches: [],
-            rounds: [],
-            news: [],
-            tots: [],
-            standings: { A: [], B: [] },
-            lastUpdate: new Date().toISOString()
-        };
-        fs.writeFileSync(DATA_FILE, JSON.stringify(initialData, null, 2));
-        console.log('Created initial data.json file');
+    try {
+        // التأكد من أن المسار موجود
+        const dir = path.dirname(DATA_FILE);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        
+        if (!fs.existsSync(DATA_FILE)) {
+            const initialData = {
+                teams: [],
+                players: [],
+                matches: [],
+                rounds: [],
+                news: [],
+                tots: [],
+                standings: { A: [], B: [] },
+                lastUpdate: new Date().toISOString()
+            };
+            fs.writeFileSync(DATA_FILE, JSON.stringify(initialData, null, 2));
+            console.log('Created initial data.json file at:', DATA_FILE);
+        }
+    } catch (error) {
+        console.error('Error initializing data file:', error);
+        console.log('Data file path:', DATA_FILE);
     }
 }
 
@@ -37,11 +48,18 @@ function readData() {
 // Write data to file
 function writeData(data) {
     try {
+        // التأكد من أن المسار موجود قبل الكتابة
+        const dir = path.dirname(DATA_FILE);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        
         data.lastUpdate = new Date().toISOString();
         fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
         return true;
     } catch (error) {
         console.error('Error writing data file:', error);
+        console.error('Attempted path:', DATA_FILE);
         return false;
     }
 }

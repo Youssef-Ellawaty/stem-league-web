@@ -115,6 +115,12 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
+    // Health check endpoint
+    if (pathname === '/health' && req.method === 'GET') {
+        sendJSON(res, 200, { status: 'healthy' });
+        return;
+    }
+
     // API Routes
     if (pathname.startsWith('/api/')) {
         try {

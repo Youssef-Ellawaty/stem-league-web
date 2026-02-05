@@ -732,7 +732,7 @@ function renderTeamFormation(teamId) {
         
         return `
             <div class="player-spot" style="left: ${coords[index].left}; top: ${coords[index].top}; transform: translate(-50%, -50%);" onclick="showPlayerCard(${player.id})" tabindex="0" role="button" aria-label="عرض بطاقة ${player.name}">
-                <div class="player-avatar">
+                <div class="player-avatar ${player.photo ? 'player-avatar--photo' : ''}">
                     ${player.photo ? `<img src="${player.photo}" alt="${player.name}" class="player-field-photo"><span class="player-number-badge">${player.number}</span>` : `<span>${player.number}</span>`}
                 </div>
                 <div class="player-name">${player.name}</div>

@@ -944,6 +944,31 @@ body {
     box-shadow: var(--shadow-md);
 }
 
+/* صورة اللاعب على الملعب: بدون دائرة وبحجم أكبر */
+.player-avatar--photo {
+    width: 100px;
+    height: 100px;
+    background: none;
+    border: none;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    padding: 0;
+}
+
+.player-avatar--photo .player-field-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+}
+
+.player-avatar--photo .player-number-badge {
+    bottom: 2px;
+    font-size: 0.8rem;
+    padding: 3px 8px;
+}
+
 .player-name {
     font-size: 0.7rem;
     font-weight: 700;
@@ -2065,6 +2090,11 @@ textarea.admin-input {
         font-size: 0.95rem;
     }
     
+    .player-avatar--photo {
+        width: 80px;
+        height: 80px;
+    }
+    
     .player-name {
         font-size: 0.65rem;
         padding: 3px 8px;
@@ -2412,12 +2442,17 @@ textarea.admin-input {
     position: relative;
 }
 
-.player-avatar img,
-.player-field-photo {
+.player-avatar:not(.player-avatar--photo) img,
+.player-avatar:not(.player-avatar--photo) .player-field-photo {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: var(--radius-full);
+}
+
+.player-avatar--photo img,
+.player-avatar--photo .player-field-photo {
+    border-radius: var(--radius-md);
 }
 
 .player-number-badge {

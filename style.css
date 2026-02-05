@@ -948,7 +948,7 @@ body {
 .player-avatar--photo {
     width: 160px;
     height: 160px;
-    background: none;
+    background: var(--field-green);
     border: none;
     border-radius: 0;
     box-shadow: var(--shadow-lg);

@@ -5,48 +5,59 @@ const path = require('path');
 const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'data.json');
 
-// Initialize data file if it doesn't exist
-function initDataFile() {
-    try {
-        if (!fs.existsSync(DATA_FILE)) {
-            const initialData = {
-                teams: [],
-                players: [],
-                matches: [],
-                rounds: [],
-                news: [],
-                tots: [],
-                standings: { A: [], B: [] },
-                lastUpdate: new Date().toISOString()
-            };
-            fs.writeFileSync(DATA_FILE, JSON.stringify(initialData, null, 2));
-            console.log('Created initial data.json file at:', DATA_FILE);
-        }
-    } catch (error) {
-        console.error('Error initializing data file:', error);
-    }
-}
+// In-Memory data storage
+let appData = {
+    teams: [],
+    players: [],
+    matches: [],
+    rounds: [],
+    news: [],
+    tots: [],
+    standings: { A: [], B: [] },
+    lastUpdate: new Date().toISOString()
+};
 
-// Read data from file
+// Read data from data.json
 function readData() {
     try {
-        const content = fs.readFileSync(DATA_FILE, 'utf-8');
-        return JSON.parse(content);
+        if (fs.existsSync(DATA_FILE)) {
+            const content = fs.readFileSync(DATA_FILE, 'utf-8');
+            const fileData = JSON.parse(content);
+            return fileData;
+        }
     } catch (error) {
-        console.error('Error reading data file:', error);
-        return null;
+        console.error('Error reading data.json:', error);
     }
+    return appData;
 }
 
-// Write data to file
+// Write data to data.json
 function writeData(data) {
     try {
         data.lastUpdate = new Date().toISOString();
         fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+        appData = data;
         return true;
     } catch (error) {
-        console.error('Error writing data file:', error);
+        console.error('Error writing to data.json:', error);
+        // Still update in-memory data even if file write fails
+        appData = data;
         return false;
+    }
+}
+
+// Initialize by loading from data.json
+function initData() {
+    try {
+        if (fs.existsSync(DATA_FILE)) {
+            const content = fs.readFileSync(DATA_FILE, 'utf-8');
+            appData = JSON.parse(content);
+            console.log('✓ Data loaded from data.json');
+        } else {
+            console.log('⚠ data.json not found, using in-memory data');
+        }
+    } catch (error) {
+        console.error('✗ Error loading data.json:', error);
     }
 }
 
@@ -97,8 +108,8 @@ function getContentType(filePath) {
     return contentTypes[extname] || 'text/plain';
 }
 
-// Initialize data file
-initDataFile();
+// Initialize by loading from data.json
+initData();
 
 const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, `http://localhost:${PORT}`);

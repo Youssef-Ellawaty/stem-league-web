@@ -2072,6 +2072,21 @@ textarea.admin-input {
     .tots-players {
         gap: 16px;
     }
+    
+    /* ملعب أطول على الموبايل لتجنب تداخل البطاقات */
+    .field-container {
+        padding: 16px 12px;
+        overflow-x: auto;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        max-height: none;
+    }
+    
+    .football-field {
+        aspect-ratio: auto;
+        min-height: 720px;
+        width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
@@ -2097,6 +2112,11 @@ textarea.admin-input {
     .player-avatar--photo {
         width: 120px;
         height: 120px;
+    }
+    
+    /* ملعب أطول على الهواتف الصغيرة */
+    .football-field {
+        min-height: 800px;
     }
     
     .player-name {

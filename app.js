@@ -257,63 +257,56 @@ function initSampleData() {
         { id: 8, name: 'خليها على الله', group: 'B', logo: '🌟' }
     ];
 
-    // Real players with their actual positions
+    // Real players with their actual positions وصور البطاقات
     data.players = [
         // Team 1: King
-        { id: 1, teamId: 1, name: 'Ahmed Maher', position: 'FW', number: 9, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 2, teamId: 1, name: 'Mohamed Elmasry', position: 'MF', number: 8, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 3, teamId: 1, name: 'Mahmoud Saber', position: 'DF', number: 4, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 4, teamId: 1, name: 'Omar Bona', position: 'MF', number: 10, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 1, teamId: 1, name: 'Ahmed Maher', position: 'FW', number: 9, photo: '/players/ahmed_maher-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 2, teamId: 1, name: 'Mohamed Elmasry', position: 'MF', number: 8, photo: '/players/mohamed_elmasry-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 3, teamId: 1, name: 'Mahmoud Saber', position: 'DF', number: 4, photo: '/players/mahmouf_saber-removebg-preview (1).png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 4, teamId: 1, name: 'Omar Bona', position: 'MF', number: 10, photo: '/players/omar_bona-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
         { id: 5, teamId: 1, name: 'ELdegwy', position: 'GK', number: 1, photo: '/players/El-Degwy.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        
         // Team 2: صيادين البرايز
-        { id: 6, teamId: 2, name: 'Amr Mohamed', position: 'MF', number: 8, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 6, teamId: 2, name: 'Amr Mohamed', position: 'MF', number: 8, photo: '/players/amr-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
         { id: 7, teamId: 2, name: 'Yassin Hossam', position: 'FW', number: 9, photo: '/players/Yassin Hossam.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 8, teamId: 2, name: 'Hamo Ayman', position: 'MF', number: 10, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 9, teamId: 2, name: 'Ali Elsaqa', position: 'DF', number: 4, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 10, teamId: 2, name: 'Youssef Ragab', position: 'GK', number: 1, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        
+        { id: 8, teamId: 2, name: 'Hamo Ayman', position: 'MF', number: 10, photo: '/players/hamo_ayman-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 9, teamId: 2, name: 'Ali Elsaqa', position: 'DF', number: 4, photo: '/players/ali_elsaqa-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 10, teamId: 2, name: 'Youssef Ragab', position: 'GK', number: 1, photo: '/players/youssef_ragab-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
         // Team 3: Koom Elzawany Pro
-        { id: 11, teamId: 3, name: 'Mohamed Ashraf', position: 'FW', number: 9, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 12, teamId: 3, name: 'Sherbo', position: 'MF', number: 8, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 13, teamId: 3, name: 'Omar Farag', position: 'DF', number: 4, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 14, teamId: 3, name: 'Ali Arada', position: 'DF', number: 5, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 15, teamId: 3, name: 'Ammar', position: 'GK', number: 1, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        
+        { id: 11, teamId: 3, name: 'Mohamed Ashraf', position: 'FW', number: 9, photo: '/players/mohamed_ashraf-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 12, teamId: 3, name: 'Sherbo', position: 'MF', number: 8, photo: '/players/sherbo-removebg-preview (1).png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 13, teamId: 3, name: 'Omar Farag', position: 'DF', number: 4, photo: '/players/omar_farag-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 14, teamId: 3, name: 'Ali Arada', position: 'DF', number: 5, photo: '/players/ali_abdelmen3em-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 15, teamId: 3, name: 'Ammar', position: 'GK', number: 1, photo: '/players/ammar-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
         // Team 4: خدتك عليه
-        { id: 16, teamId: 4, name: 'Eyad', position: 'FW', number: 9, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 16, teamId: 4, name: 'Eyad', position: 'FW', number: 9, photo: '/players/eyad-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
         { id: 17, teamId: 4, name: '3ayad', position: 'MF', number: 8, photo: '/players/Mo 3yaad (1).png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 18, teamId: 4, name: 'Zar3a', position: 'DF', number: 4, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 19, teamId: 4, name: '7anafy', position: 'DF', number: 5, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 20, teamId: 4, name: '7omos', position: 'GK', number: 1, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        
+        { id: 18, teamId: 4, name: 'Zar3a', position: 'DF', number: 4, photo: '/players/youssef_gaber-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 19, teamId: 4, name: '7anafy', position: 'DF', number: 5, photo: '/players/ahmed_hanafi-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 20, teamId: 4, name: '7omos', position: 'GK', number: 1, photo: '/players/ahmed_adel-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
         // Team 5: Kong
         { id: 21, teamId: 5, name: 'Mo Yasser', position: 'MF', number: 8, photo: '/players/Mo Yasser.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 22, teamId: 5, name: 'AbdelKareem', position: 'FW', number: 9, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 22, teamId: 5, name: 'AbdelKareem', position: 'FW', number: 9, photo: '/players/abdelkareem-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
         { id: 23, teamId: 5, name: 'Ellawaty', position: 'DF', number: 4, photo: '/players/Jo Ellawaty (1).png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 24, teamId: 5, name: 'Karezma', position: 'DF', number: 5, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 25, teamId: 5, name: 'El4arqawy', position: 'GK', number: 1, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        
+        { id: 24, teamId: 5, name: 'Karezma', position: 'DF', number: 5, photo: '/players/karizma-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 25, teamId: 5, name: 'El4arqawy', position: 'GK', number: 1, photo: '/players/el4arqawy-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
         // Team 6: 7enkesh FC
-        { id: 26, teamId: 6, name: 'Zoz AbdelKareem', position: 'FW', number: 9, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 27, teamId: 6, name: 'Tharwat', position: 'MF', number: 8, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 28, teamId: 6, name: 'A7med Ayman', position: 'MF', number: 10, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 29, teamId: 6, name: 'Osos', position: 'DF', number: 4, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 30, teamId: 6, name: 'Bahrawy', position: 'GK', number: 1, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        
+        { id: 26, teamId: 6, name: 'Zoz AbdelKareem', position: 'FW', number: 9, photo: '/players/zoz_abdelkareem-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 27, teamId: 6, name: 'Tharwat', position: 'MF', number: 8, photo: '/players/ahmed_tharwat-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 28, teamId: 6, name: 'A7med Ayman', position: 'MF', number: 10, photo: '/players/ahmed_ayman-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 29, teamId: 6, name: 'Osos', position: 'DF', number: 4, photo: '/players/osos-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 30, teamId: 6, name: 'Bahrawy', position: 'GK', number: 1, photo: '/players/elbahrawy-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
         // Team 7: جبناهم فيك
-        { id: 31, teamId: 7, name: 'Bavly Remon', position: 'FW', number: 9, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 32, teamId: 7, name: 'Salem', position: 'FW', number: 11, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 33, teamId: 7, name: 'Turkey', position: 'MF', number: 8, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 34, teamId: 7, name: 'Omar Kamal', position: 'DF', number: 4, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 35, teamId: 7, name: 'A7med Reda', position: 'GK', number: 1, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        
+        { id: 31, teamId: 7, name: 'Bavly Remon', position: 'FW', number: 9, photo: '/players/bavly-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 32, teamId: 7, name: 'Salem', position: 'FW', number: 11, photo: '/players/salem-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 33, teamId: 7, name: 'Turkey', position: 'MF', number: 8, photo: '/players/gasser_elturkey-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 34, teamId: 7, name: 'Omar Kamal', position: 'DF', number: 4, photo: '/players/omar_kamal-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 35, teamId: 7, name: 'A7med Reda', position: 'GK', number: 1, photo: '/players/ahmed_reda-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
         // Team 8: خليها على الله
-        { id: 36, teamId: 8, name: 'Omar Tamer', position: 'FW', number: 9, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 37, teamId: 8, name: 'Seif', position: 'MF', number: 8, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 38, teamId: 8, name: 'M3z', position: 'MF', number: 10, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 39, teamId: 8, name: 'Youssef Ali', position: 'DF', number: 4, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
-        { id: 40, teamId: 8, name: 'George Remon', position: 'GK', number: 1, photo: '', goals: 0, assists: 0, yellowCards: 0, redCards: 0 }
+        { id: 36, teamId: 8, name: 'Omar Tamer', position: 'FW', number: 9, photo: '/players/omar_tamer-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 37, teamId: 8, name: 'Seif', position: 'MF', number: 8, photo: '/players/seif_abdelazeem-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 38, teamId: 8, name: 'M3z', position: 'MF', number: 10, photo: '/players/m3z-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 39, teamId: 8, name: 'Youssef Ali', position: 'DF', number: 4, photo: '/players/youssef_ali-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 },
+        { id: 40, teamId: 8, name: 'George Remon', position: 'GK', number: 1, photo: '/players/george_remon-removebg-preview.png', goals: 0, assists: 0, yellowCards: 0, redCards: 0 }
     ];
 
     // Rounds

@@ -548,6 +548,13 @@
   ],
   "news": [
     {
+      "id": 1770475546645,
+      "title": "ksdfuhjhds",
+      "content": "duhsjksdkl",
+      "image": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
+      "date": "2026-02-07"
+    },
+    {
       "id": 2,
       "title": "a7a",
       "content": "a7a",
@@ -664,5 +671,6 @@
         "points": 0
       }
     ]
-  }
+  },
+  "lastUpdate": "2026-02-07T14:45:27.933Z"
 }

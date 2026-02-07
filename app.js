@@ -690,39 +690,62 @@ function renderTeamFormation(teamId) {
     const formation = document.getElementById('playersFormation');
     const teamPlayers = data.players.filter(p => p.teamId === teamId);
     
-    // Calculate position counts
+    // ترتيب: حارس ثم مدافعين ثم وسط ثم مهاجمين لضمان توزيع صحيح
+    const order = { GK: 0, DF: 1, MF: 2, FW: 3 };
+    const sortedPlayers = [...teamPlayers].sort((a, b) => order[a.position] - order[b.position]);
+    
     const positionCounts = {
-        GK: teamPlayers.filter(p => p.position === 'GK').length,
-        DF: teamPlayers.filter(p => p.position === 'DF').length,
-        MF: teamPlayers.filter(p => p.position === 'MF').length,
-        FW: teamPlayers.filter(p => p.position === 'FW').length
+        GK: sortedPlayers.filter(p => p.position === 'GK').length,
+        DF: sortedPlayers.filter(p => p.position === 'DF').length,
+        MF: sortedPlayers.filter(p => p.position === 'MF').length,
+        FW: sortedPlayers.filter(p => p.position === 'FW').length
     };
     
-    // Dynamic coordinates based on player count per position
     function getPositionCoords(position, count) {
+        const spread = (n, leftCenter, top) => {
+            if (n <= 0) return [];
+            if (n === 1) return [{ left: '50%', top }];
+            const positions = [];
+            const step = 40 / (n - 1);
+            for (let i = 0; i < n; i++) {
+                const pct = 30 + (i * step);
+                positions.push({ left: pct + '%', top });
+            }
+            return positions;
+        };
         const coords = {
-            GK: {
-                1: [{ left: '50%', top: '88%' }]
-            },
+            GK: { 1: [{ left: '50%', top: '88%' }] },
             DF: {
                 1: [{ left: '50%', top: '70%' }],
-                2: [{ left: '30%', top: '70%' }, { left: '70%', top: '70%' }]
+                2: [{ left: '30%', top: '70%' }, { left: '70%', top: '70%' }],
+                3: [{ left: '25%', top: '70%' }, { left: '50%', top: '70%' }, { left: '75%', top: '70%' }],
+                4: [{ left: '20%', top: '70%' }, { left: '40%', top: '70%' }, { left: '60%', top: '70%' }, { left: '80%', top: '70%' }],
+                5: spread(5, '50%', '70%')
             },
             MF: {
                 1: [{ left: '50%', top: '45%' }],
-                2: [{ left: '30%', top: '45%' }, { left: '70%', top: '45%' }]
+                2: [{ left: '30%', top: '45%' }, { left: '70%', top: '45%' }],
+                3: [{ left: '25%', top: '45%' }, { left: '50%', top: '45%' }, { left: '75%', top: '45%' }],
+                4: [{ left: '20%', top: '45%' }, { left: '40%', top: '45%' }, { left: '60%', top: '45%' }, { left: '80%', top: '45%' }],
+                5: spread(5, '50%', '45%')
             },
             FW: {
                 1: [{ left: '50%', top: '18%' }],
-                2: [{ left: '30%', top: '18%' }, { left: '70%', top: '18%' }]
+                2: [{ left: '30%', top: '18%' }, { left: '70%', top: '18%' }],
+                3: [{ left: '25%', top: '18%' }, { left: '50%', top: '18%' }, { left: '75%', top: '18%' }],
+                4: [{ left: '20%', top: '18%' }, { left: '40%', top: '18%' }, { left: '60%', top: '18%' }, { left: '80%', top: '18%' }],
+                5: spread(5, '50%', '18%')
             }
         };
-        return coords[position]?.[count] || coords[position]?.[1] || [];
+        const arr = coords[position];
+        if (!arr) return [];
+        const list = arr[Math.min(count, 5)] || arr[1] || arr[Object.keys(arr)[0]];
+        return Array.isArray(list) ? list : [];
     }
     
     let positionIndex = { GK: 0, DF: 0, MF: 0, FW: 0 };
     
-    formation.innerHTML = teamPlayers.map(player => {
+    formation.innerHTML = sortedPlayers.map(player => {
         const count = positionCounts[player.position];
         const coords = getPositionCoords(player.position, count);
         const index = positionIndex[player.position];

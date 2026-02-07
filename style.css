@@ -2073,19 +2073,25 @@ textarea.admin-input {
         gap: 16px;
     }
     
-    /* ملعب أطول على الموبايل لتجنب تداخل البطاقات */
+    /* ملعب أطول على الموبايل مع ارتفاع ثابت ليعمل توزيع اللاعبين (top %) */
     .field-container {
         padding: 16px 12px;
         overflow-x: auto;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
-        max-height: none;
     }
     
     .football-field {
         aspect-ratio: auto;
-        min-height: 720px;
         width: 100%;
+        height: 720px;
+        min-height: 720px;
+    }
+    
+    .players-formation {
+        position: absolute;
+        inset: 0;
+        height: auto;
     }
 }
 
@@ -2116,6 +2122,7 @@ textarea.admin-input {
     
     /* ملعب أطول على الهواتف الصغيرة */
     .football-field {
+        height: 800px;
         min-height: 800px;
     }
     

@@ -79,13 +79,16 @@ function parseBody(req) {
     });
 }
 
-// Send JSON response
+// Send JSON response (دائماً بدون كاش لضمان بيانات حديثة)
 function sendJSON(res, statusCode, data) {
     res.writeHead(statusCode, {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+        'Expires': '0'
     });
     res.end(JSON.stringify(data));
 }
@@ -135,7 +138,7 @@ const server = http.createServer(async (req, res) => {
     // API Routes
     if (pathname.startsWith('/api/')) {
         try {
-            // GET /api/data - Get all data
+            // GET /api/data - Get all data (قراءة من الملف في كل طلب)
             if (pathname === '/api/data' && req.method === 'GET') {
                 const data = readData();
                 if (data) {
@@ -408,7 +411,10 @@ const server = http.createServer(async (req, res) => {
         } else {
             res.writeHead(200, { 
                 'Content-Type': getContentType(filePath),
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma': 'no-cache',
+                'Expires': '0'
             });
             res.end(content, 'utf-8');
         }

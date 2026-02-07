@@ -92,7 +92,7 @@ function switchMatchTab(button) {
 // Load data from server API فقط (بدون localStorage)
 async function loadData() {
     try {
-        const response = await fetch(`${API_BASE}/data`);
+        const response = await fetch(`${API_BASE}/data?_=${Date.now()}`, { cache: 'no-store' });
         if (response.ok) {
             const serverData = await response.json();
             if (serverData.teams && serverData.teams.length > 0) {
@@ -115,10 +115,9 @@ async function saveData() {
     try {
         const response = await fetch(`${API_BASE}/data`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+            cache: 'no-store'
         });
         if (!response.ok) {
             throw new Error('Failed to save to server');

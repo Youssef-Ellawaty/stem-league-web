@@ -89,17 +89,14 @@ function switchMatchTab(button) {
     }
 }
 
-// Load data from server API فقط (بدون localStorage)
+// Load data from server API فقط — نعتمد دائماً على بيانات السيرفر عند نجاح الطلب
 async function loadData() {
     try {
         const response = await fetch(`${API_BASE}/data?_=${Date.now()}`, { cache: 'no-store' });
         if (response.ok) {
             const serverData = await response.json();
-            if (serverData.teams && serverData.teams.length > 0) {
-                data = serverData;
-            } else {
-                initSampleData();
-            }
+            // استخدام بيانات السيرفر كما هي (حتى لو مختلفة عن app.js)
+            data = normalizeServerData(serverData);
         } else {
             initSampleData();
         }
@@ -108,6 +105,22 @@ async function loadData() {
         initSampleData();
     }
     updateUI();
+}
+
+// التأكد من وجود كل المفاتيح المطلوبة مع قيم افتراضية إن نَقَصت
+function normalizeServerData(serverData) {
+    return {
+        teams: Array.isArray(serverData.teams) ? serverData.teams : [],
+        players: Array.isArray(serverData.players) ? serverData.players : [],
+        matches: Array.isArray(serverData.matches) ? serverData.matches : [],
+        rounds: Array.isArray(serverData.rounds) ? serverData.rounds : [],
+        news: Array.isArray(serverData.news) ? serverData.news : [],
+        tots: Array.isArray(serverData.tots) ? serverData.tots : [],
+        standings: serverData.standings && typeof serverData.standings === 'object'
+            ? { A: serverData.standings.A || [], B: serverData.standings.B || [] }
+            : { A: [], B: [] },
+        lastUpdate: serverData.lastUpdate || new Date().toISOString()
+    };
 }
 
 // Save data to server API فقط (بدون localStorage)

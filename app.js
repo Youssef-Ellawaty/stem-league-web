@@ -303,7 +303,7 @@ function initSampleData() {
         {
             id: 1,
             title: 'انطلاق بطولة STEM League للموسم الجديد',
-            content: 'ستنطلق اليوم فعاليات بطولة STEM League في موسمها الجديد بمشاركة 8 فرق متنافسة على اللقب.',
+            content: 'سوف تنطلق اليوم فعاليات بطولة STEM League في موسمها الجديد بمشاركة 8 فرق متنافسة على اللقب.',
             image: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800',
             date: '2026-02-09'
         }

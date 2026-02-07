@@ -89,42 +89,28 @@ function switchMatchTab(button) {
     }
 }
 
-// Load data from server API
+// Load data from server API فقط (بدون localStorage)
 async function loadData() {
     try {
         const response = await fetch(`${API_BASE}/data`);
         if (response.ok) {
             const serverData = await response.json();
-            // Check if server has data
             if (serverData.teams && serverData.teams.length > 0) {
                 data = serverData;
             } else {
-                // Initialize with sample data if server is empty
                 initSampleData();
             }
-        } else {
-            // Fallback: try to load from localStorage
-            const saved = localStorage.getItem('stemLeagueData');
-            if (saved) {
-                data = JSON.parse(saved);
-            } else {
-                initSampleData();
-            }
-        }
-    } catch (error) {
-        console.error('Error loading data from server:', error);
-        // Fallback to localStorage
-        const saved = localStorage.getItem('stemLeagueData');
-        if (saved) {
-            data = JSON.parse(saved);
         } else {
             initSampleData();
         }
+    } catch (error) {
+        console.error('Error loading data from server:', error);
+        initSampleData();
     }
     updateUI();
 }
 
-// Save data to server API
+// Save data to server API فقط (بدون localStorage)
 async function saveData() {
     try {
         const response = await fetch(`${API_BASE}/data`, {
@@ -134,26 +120,19 @@ async function saveData() {
             },
             body: JSON.stringify(data)
         });
-        
         if (!response.ok) {
             throw new Error('Failed to save to server');
         }
-        
-        // Also save to localStorage as backup
-        localStorage.setItem('stemLeagueData', JSON.stringify(data));
-        localStorage.setItem('stemLeagueLastUpdate', new Date().toISOString());
+        data.lastUpdate = new Date().toISOString();
     } catch (error) {
         console.error('Error saving data to server:', error);
-        // Fallback: save to localStorage only
-        localStorage.setItem('stemLeagueData', JSON.stringify(data));
-        localStorage.setItem('stemLeagueLastUpdate', new Date().toISOString());
     }
     updateDataInfo();
 }
 
 // Update data info display
 function updateDataInfo() {
-    const lastUpdate = data.lastUpdate || localStorage.getItem('stemLeagueLastUpdate');
+    const lastUpdate = data.lastUpdate;
     const lastUpdateEl = document.getElementById('lastUpdateTime');
     const dataSizeEl = document.getElementById('dataSize');
     

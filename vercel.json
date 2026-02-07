@@ -1,22 +1,58 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
+    "version": 2,
+    "builds": [
+      {
+        "src": "api/**/*.js",
+        "use": "@vercel/node"
+      },
+      {
+        "src": "public/**",
+        "use": "@vercel/static"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/api/data",
+        "methods": ["GET"],
+        "dest": "/api/data.js"
+      },
+      {
+        "src": "/api/data",
+        "methods": ["POST"],
+        "dest": "/api/save-data.js"
+      },
+      {
+        "src": "/api/news",
+        "methods": ["GET", "POST", "DELETE"],
+        "dest": "/api/news.js"
+      },
+      {
+        "src": "/api/match",
+        "methods": ["GET", "POST", "DELETE"],
+        "dest": "/api/match.js"
+      },
+      {
+        "src": "/api/player/stats",
+        "methods": ["POST"],
+        "dest": "/api/player-stats.js"
+      },
+      {
+        "src": "/players/(.*)",
+        "dest": "/public/players/$1"
+      },
+      {
+        "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|svg|ico|webp))",
+        "dest": "/public/$1"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "/public/index.html"
+      }
+    ],
+    "functions": {
+      "api/**/*.js": {
+        "memory": 1024,
+        "maxDuration": 10
+      }
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
   }
-}

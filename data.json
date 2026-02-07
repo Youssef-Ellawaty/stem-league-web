@@ -531,7 +531,30 @@
       "redCards": 0
     }
   ],
-  "matches": [],
+  "matches": [
+    {
+      "id": 1770475817380,
+      "roundId": 1,
+      "team1Id": 1,
+      "team2Id": 2,
+      "score1": 0,
+      "score2": 0,
+      "date": "2026-02-09T16:00",
+      "status": "upcoming",
+      "events": []
+    },
+    {
+      "id": 1770475852579,
+      "roundId": 1,
+      "team1Id": 5,
+      "team2Id": 7,
+      "score1": 0,
+      "score2": 0,
+      "date": "2026-02-09T16:50",
+      "status": "upcoming",
+      "events": []
+    }
+  ],
   "rounds": [
     {
       "id": 1,
@@ -547,20 +570,6 @@
     }
   ],
   "news": [
-    {
-      "id": 1770475546645,
-      "title": "ksdfuhjhds",
-      "content": "duhsjksdkl",
-      "image": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
-      "date": "2026-02-07"
-    },
-    {
-      "id": 2,
-      "title": "a7a",
-      "content": "a7a",
-      "image": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
-      "date": "2026-02-07"
-    },
     {
       "id": 1,
       "title": "انطلاق بطولة STEM League للموسم الجديد",

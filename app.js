@@ -138,6 +138,9 @@ async function saveData() {
         data.lastUpdate = new Date().toISOString();
     } catch (error) {
         console.error('Error saving data to server:', error);
+        if (typeof alert !== 'undefined') {
+            alert('لم يتم حفظ البيانات على السيرفر. التعديلات مؤقتة وستختفي عند تحديث الصفحة.\n\nالسبب المحتمل: استضافة Vercel لا تشغّل السيرفر (Node) ولا تسمح بالكتابة. استخدم استضافة تدعم Node (مثل Railway أو Render) أو فعّل دوال API على Vercel مع تخزين خارجي.');
+        }
     }
     updateDataInfo();
 }
